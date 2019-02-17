@@ -1,6 +1,16 @@
+Vue.mixin({
+  data: function() {
+    return : {
+      NASA_WEB_KEY : 'vME6LAMD7IhEiy7rDmjfIaG6MhiKbu1MNIqxtqd1',
+      NASA_WEB_QUERY : 'https://api.nasa.gov/planetary/apod?api_key='
+    }
+  }
+})
+
+
 <template>
   <div id="app">
-    <div class="banner">
+    <div>
       <h1>Welcome to Image of day</h1>
       <h2>Here is image of space today</h2>
     </div>
@@ -8,8 +18,13 @@
 </template>
 
 <script>
+  import imageavailble from './ImageFetch.vue'
+  
   export default {
-    name: 'app'
+    name: 'app',
+    components : {
+      'imagefetch' : imageavailble
+    }
   }
 </script>
 
