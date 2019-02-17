@@ -10,9 +10,8 @@
         props : ['keydetail'],
         data : function() {
             return {
-                
+
             }
         }
     }
-
 </script>
