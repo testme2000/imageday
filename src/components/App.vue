@@ -12,18 +12,52 @@ Vue.mixin({
   <div id="app">
     <div>
       <h1>Welcome to Image of day</h1>
-      <h2>Here is image of space today</h2>
+      <h2>Here is image of space today {{todaydate}}</h2>
+      <div>
+        <imagefetch :keydetail="todaydate"></imagefetch>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import axios from 'axios'
   import imageavailble from './ImageFetch.vue'
   
   export default {
     name: 'app',
+    imagedetails : {
+       title : '',
+       description: '',
+       imageurl : ''
+    },
     components : {
       'imagefetch' : imageavailble
+    },
+    computed : {
+      todaydate : function() {
+        let today = new Date();
+        return today.toLocaleDateString('en-US');
+      }
+    },
+    created : function() {
+      this.loadimageForToday(this.todateDate);
+    },
+    methods : {
+      loadimageForToday : function(todayDate)
+      {
+          let imageurl = NASA_WEB_QUERY + NASA_WEB_KEY;
+          axios.get(imageurl).then(result => {
+            // Get image title, description and image url
+            this.imagedetails.title = result.title;
+
+          }, error => {
+              this.errorMessage = error.message;
+              this.resultArrived = false;
+              this.fetchStatus = true;
+            });
+
+      }
     }
   }
 </script>
