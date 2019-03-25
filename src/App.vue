@@ -2,7 +2,7 @@
   <div id="app">
     <h1>Welcome to Image Day</h1>
     <h2>Image of today </h2>
-    <image-for-date></image-for-date>
+    <image-for-date fetchdate="currentDate"></image-for-date>
   </div>
 </template>
 
@@ -20,9 +20,19 @@ export const GLOBAL = {
 
 export default {
   name: 'app',
+  currentDate : '',
   mixins : [GLOBAL],
   components: {
     'ImageForDate' : FetchImage
+  },
+  created :function() {
+    this.initilizeImageDay();
+  },
+  methods : {
+      initilizeImageDay : function() {
+          // Initialize current date
+          this.currentDate = new Date().format('m-d-Y h:i:s');
+      }
   }
 }
 </script>

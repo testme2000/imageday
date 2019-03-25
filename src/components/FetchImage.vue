@@ -1,7 +1,7 @@
 
 <template>
     <div>
-        <h1>Fetching is in progress</h1>
+        <h1>{{Status}}</h1>
     </div>    
 </template>
 
@@ -11,7 +11,14 @@
         props : ['fetchdate'],
         data : function() {
             return {
+                "Status" : "Fetching is in process for current day....."
+            }
+        },
+        methods : {
+            preparedFetch : function() {
+                var test = 0;
 
+                test += 1;
             }
         }
     }
