@@ -2,13 +2,14 @@
   <div id="app">
     <h1>Welcome to Image Day</h1>
     <h2>Image of today </h2>
-    <image-for-date fetchdate="currentDate"></image-for-date>
+    <image-for-date v-bind:fetchdate="currentDate"></image-for-date>
   </div>
 </template>
 
 <script>
   import FetchImage from './components/FetchImage.vue'
-  
+  import GLOBAL from './mixins/Global.vue'
+ /* 
 export const GLOBAL = {
   data() {
       return {
@@ -16,22 +17,26 @@ export const GLOBAL = {
         NASA_WEBURL : 'https://api.nasa.gov/planetary/apod?api_key='
       }
   }
-}
+}*/
 
 export default {
   name: 'app',
   currentDate : '',
+  test : {},
+  test2 : 999,
   mixins : [GLOBAL],
   components: {
     'ImageForDate' : FetchImage
   },
   created :function() {
+    this.test.meku = 'teku';
+    this.test2 = 6767;
     this.initilizeImageDay();
   },
   methods : {
       initilizeImageDay : function() {
           // Initialize current date
-          this.currentDate = new Date().format('m-d-Y h:i:s');
+          this.currentDate = new Date();
       }
   }
 }
