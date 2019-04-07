@@ -1,7 +1,5 @@
-
-import { setTimeout } from 'timers';
 <template>
-    <div>
+    <div v-if="!resultArrived">
         <h1>{{Status}}</h1>
     </div>    
 </template>
@@ -9,36 +7,33 @@ import { setTimeout } from 'timers';
 <script>
     import GLOBAL from '../mixins/Global.vue'
     import axios from 'axios'
-import { setInterval } from 'timers';
 
     export default {
         name : 'FetchImage',
         imageurl : '',
         errorMessage : '',
-        resultArrived : false,
         fetchStatus : false,
-        // Image Details available from server
-        imageInformation : {
-            resultArrived : false,
-            title : 'meku',
-            copyright : '',
-            detailExplanation : '',
-            date : '',
-            urlinfo : ''
-        },
         // Component Property 
         props : ['fetchdate'],
         // Common constant value in mixins
         mixins : [GLOBAL],
         data : function() {
             return {
-                "Status" : "Fetching is in progress for today....."
+                "Status" : "Fetching is in progress for today.....",
+                resultArrived : false,
+                // Image Details available from server
+                imageInformation : {
+                    title : '',
+                    copyright : '',
+                    detailExplanation : '',
+                    date : '',
+                    urlinfo : ''
+                }
             }
         },
         created : function() {
             // Prepare image url
             this.imageurl = this.NASA_WEBURL + this.NASA_APIKEY;
-            this.imageInformation.resultArrived = false;
         },
         mounted: function() {
             setTimeout(function() {
@@ -47,29 +42,22 @@ import { setInterval } from 'timers';
         },
         methods : {
             preparedFetch : function() {
-                    console.log(this.imageInformation);
                     axios.get(this.imageurl).then(result => {
                         // Make sure that we receive proper result
-                        this.resultArrived = true,
-                        console.log(result.data.title);
-                        console.log(this.imageInformation);
-                        console.log(this.imageurl);
-                        //this.imageInformation.title = result.data.title;
-                        //this.imageInformation.copyright = result.data.copyright;
-                        //this.imageInformation.detailExplnation = result.data.explantion;
-                        //copyright : '',
-                        //detailExplnation : '',
-                        //date : '',
-                        //urlinfo : ''
-
-  
+                        console.log(result.data);
+                        this.imageInformation.title = result.data.title;
+                        this.imageInformation.copyright = result.data.copyright;
+                        this.imageInformation.detailExplnation = result.data.explantion;
+                        this.imageInformation.date = result.data.date;
+                        this.imageInformation.urlinfo = result.data.url;
+                        this.resultArrived = true;
+                        this.$emit('imagefetched',this.imageInformation);
                     }, error => {
                         this.errorMessage = "Information not found";
-                        this.resultArrived = false;
+                        this.imageInformation.resultArrived = false;
                         this.fetchStatus = true;
+                        this.resultArrived = true;
                     });
-
-
             }
         }
     }
