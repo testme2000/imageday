@@ -1,19 +1,20 @@
 <template>
     <div>
-        <table>
+        <table class="table table-bordered">
             <tr>
-                <td>Title</td>
-                <td>{{imagedetail.title}}</td>
+                <td class="font-weight-bold">Title</td>
+                <td class="text-left">{{imagedetail.title}}</td>
             </tr>  
             <tr>
-                <td>Information</td>
-                <td>{{imagedetail.detailExplanation}}</td>
+                <td class="font-weight-bold">Information</td>
+                <td class="text-left">{{imagedetail.detailExplanation}}</td>
             </tr>      
             <tr>
-                <td>Copyright</td>
-                <td>{{imagedetail.copyright}}</td>
+                <td class="font-weight-bold">Copyright</td>
+                <td class="text-left">{{imagedetail.copyright}}</td>
             </tr>
         </table>    
+        <img v-bind:src="imagedetail.urlinfo" class="img-rounded"/>    
     </div>    
 </template>
 

@@ -47,7 +47,7 @@
                         console.log(result.data);
                         this.imageInformation.title = result.data.title;
                         this.imageInformation.copyright = result.data.copyright;
-                        this.imageInformation.detailExplnation = result.data.explantion;
+                        this.imageInformation.detailExplanation = result.data.explanation;
                         this.imageInformation.date = result.data.date;
                         this.imageInformation.urlinfo = result.data.url;
                         this.resultArrived = true;

@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <h1>Welcome to Image Day</h1>
-    <h2>Image of today </h2>
+    <h1 class="text-center">Welcome to Image Day</h1>
+    <h2 class="text-center">Image of today </h2>
     <image-for-date v-bind:fetchdate="currentDate" @imagefetched="onImageArrived"></image-for-date>
     <div v-show="resultStatus">
         <display-image v-bind:imagedetail="imageInformation"></display-image>
-     </div> 
+    </div> 
   </div>
 </template>
 
@@ -21,7 +21,7 @@ export default {
   mixins : [GLOBAL],
   data : function() {
       return {
-          resultArrived : false,
+          resultStatus : false,
           // Image Details available from server
           imageInformation : {
               title : '',
@@ -47,7 +47,6 @@ export default {
       onImageArrived : function(imageInformation) {
         this.resultStatus = true;
         this.imageInformation = imageInformation;
-        alert(imageInformation.title);
       }
   }
 }
