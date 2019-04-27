@@ -1,9 +1,16 @@
 import { shallowMount, mount } from '@vue/test-utils'
 import Vue from "vue"
 import app from "./src/App.vue"
+import axios from 'axios'
 import { exportAllDeclaration } from '@babel/types';
+import GLOBAL from './src/mixins/Global.vue'
 
-describe("ImageDay Basic Layout Verification", () => {
+
+jest.mock('axios', () => ({
+    get: jest.fn()
+}));
+
+describe("ImageDay Basic Layout Test", () => {
     ////////////////////////////////////////////////////////////////////
     // Prepare inital setup
     // 1. Mount the app
@@ -21,16 +28,41 @@ describe("ImageDay Basic Layout Verification", () => {
         expect(appWrapper.find("div").isVisible()).toBe(true);
         let divarray = appWrapper.findAll("div");
         expect(divarray.length).toBe(4);
-        console.log(appWrapper.html());
         // 6. Table, Row and column Tag - Visiblity, count, attribute
         expect(appWrapper.html().includes("table")).toBe(true);
         expect(appWrapper.findAll('table').length).toEqual(1);
-        //expect(appWrapper.classes()).toContain('table table-bordered');
-        //expect(appWrapper.classes('table table-bordered')).toBe(true);
-        
-        
-    })
-    // 1. Validate instance
-    
-
+        expect(appWrapper.find("table").isVisible()).toBe(false);
+        expect(appWrapper.findAll('tr').length).toEqual(3);        
+        expect(appWrapper.find("tr").isVisible()).toBe(false);
+        expect(appWrapper.findAll('td').length).toEqual(6);        
+        expect(appWrapper.find("td").isVisible()).toBe(false);
+        let allTD = appWrapper.findAll("td");
+        let textArray = [   "Title","","Information","","Copyright",""];
+        for(let count = 0;count < allTD.length;count++) {
+            expect(allTD.at(count).text()).toBe(textArray[count]);
+        }
+        // Image
+        expect(appWrapper.html().includes("img")).toBe(true);
+        expect(appWrapper.findAll('img').length).toEqual(1);
+        expect(appWrapper.find("img").isVisible()).toBe(false);
+        // Head H1,H2
+        expect(appWrapper.html().includes("h1")).toBe(true);
+        expect(appWrapper.find("h1").isVisible()).toBe(true);
+        expect(appWrapper.html().includes("h2")).toBe(true);
+        expect(appWrapper.find("h2").isVisible()).toBe(true);
+        expect(appWrapper.find('h1').text()).toBe("Welcome to Image Day");
+        expect(appWrapper.find('h2').text()).toBe("Image of today");
+    });
 });
+
+
+describe('Global Mixins Test', () => {
+    test("Global Mixins Validation",  () => {
+        const appwrapper = mount(app, {
+            mixins: [GLOBAL]
+        });
+        expect(appwrapper.vm.NASA_WEBURL).toEqual('https://api.nasa.gov/planetary/apod?api_key=');
+        expect(appwrapper.vm.NASA_APIKEY).toEqual('vME6LAMD7IhEiy7rDmjfIaG6MhiKbu1MNIqxtqd1');
+    });
+});
+
