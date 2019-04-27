@@ -1,4 +1,4 @@
-import { shallowMount, mount } from '@vue/test-utils'
+import { shallowMount, mount, createLocalVue } from '@vue/test-utils'
 import Vue from "vue"
 import app from "./src/App.vue"
 import axios from 'axios'
@@ -6,16 +6,15 @@ import { exportAllDeclaration } from '@babel/types';
 import GLOBAL from './src/mixins/Global.vue'
 
 
-jest.mock('axios', () => ({
-    get: jest.fn()
-}));
+//jest.mock('axios', () => ({
+//    get: jest.fn()
+//}));
 
 describe("ImageDay Basic Layout Test", () => {
     ////////////////////////////////////////////////////////////////////
     // Prepare inital setup
     // 1. Mount the app
     let appWrapper = mount(app)
-
     ///////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////
     // Basic App Property Checking
@@ -58,11 +57,31 @@ describe("ImageDay Basic Layout Test", () => {
 
 describe('Global Mixins Test', () => {
     test("Global Mixins Validation",  () => {
+        ////////////////////////////////////////////////////////////////////
+        // Prepare inital setup
+        // 1. Mount the app
         const appwrapper = mount(app, {
             mixins: [GLOBAL]
         });
+        // 2. Global Mixins has proper value
         expect(appwrapper.vm.NASA_WEBURL).toEqual('https://api.nasa.gov/planetary/apod?api_key=');
         expect(appwrapper.vm.NASA_APIKEY).toEqual('vME6LAMD7IhEiy7rDmjfIaG6MhiKbu1MNIqxtqd1');
     });
 });
 
+
+describe('App Component initialzation Test', () => {
+    ////////////////////////////////////////////////////////////////////
+    // Prepare inital setup
+    // 1. Mount the app
+    test('Created hook to be function', () => {
+        // Created hook is function that is added in app
+        var objType = app.created.toString();
+        expect(objType).toContain('function');
+        // component method initilizeImageDay is invoked within created hook
+        expect(objType).toContain('initilizeImageDay');
+    })
+    test('Default data is initialize', () => {
+        
+    })
+});
