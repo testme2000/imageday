@@ -5,11 +5,6 @@ import axios from 'axios'
 import { exportAllDeclaration } from '@babel/types';
 import GLOBAL from './src/mixins/Global.vue'
 
-
-//jest.mock('axios', () => ({
-//    get: jest.fn()
-//}));
-
 describe("ImageDay Basic Layout Test", () => {
     ////////////////////////////////////////////////////////////////////
     // Prepare inital setup
