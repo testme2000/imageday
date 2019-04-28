@@ -76,12 +76,30 @@ describe('App Component initialzation Test', () => {
     // 1. Mount the app
     test('Created hook to be function', () => {
         // Created hook is function that is added in app
-        var objType = app.created.toString();
-        expect(objType).toContain('function');
+        let objType = Object.prototype.toString.call(app.created);
+        expect(objType).toContain('Function');
         // component method initilizeImageDay is invoked within created hook
-        expect(objType).toContain('initilizeImageDay');
+        objType = Object.prototype.toString.call(app.methods.initilizeImageDay);
+        expect(objType).toContain('Function');
     })
     test('Default data is initialize', () => {
-        
+        // Component has data function
+        let objType = Object.prototype.toString.call(app.data);
+        expect(objType).toContain('Function');
+        // Invoke data function and verify the value
+        let objValue = app.data();
+        expect(objValue.resultStatus).toBeFalsy();
+        expect(objValue.imageInformation.title).toBe('');
+        expect(objValue.imageInformation.copyright).toBe('');
+        expect(objValue.imageInformation.detailExplanation).toBe('');
+        expect(objValue.imageInformation.date).toBe('');
+        expect(objValue.imageInformation.urlinfo).toBe('');
+        // Mount app and verify data
+        let appInstance = new Vue(app).$mount();
+        let todayDate = new Date();
+        expect(appInstance.currentDate.getFullYear()).toEqual(todayDate.getFullYear());
+        expect(appInstance.currentDate.getMonth() + 1).toEqual(todayDate.getMonth() + 1);
+        expect(appInstance.currentDate.getDate()).toEqual(todayDate.getDate());
+        console.log(appInstance.currentDate);
     })
 });
