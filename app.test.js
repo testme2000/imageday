@@ -100,6 +100,35 @@ describe('App Component initialzation Test', () => {
         expect(appInstance.currentDate.getFullYear()).toEqual(todayDate.getFullYear());
         expect(appInstance.currentDate.getMonth() + 1).toEqual(todayDate.getMonth() + 1);
         expect(appInstance.currentDate.getDate()).toEqual(todayDate.getDate());
-        console.log(appInstance.currentDate);
+    })
+    test('Lifecycle create hook verification', () => {
+        const initilizeImageDay = jest.fn();
+        const wrapper = shallowMount(app, {
+            methods : {
+                initilizeImageDay
+            }
+        });
+        expect(initilizeImageDay).toHaveBeenCalled();
+    })
+    test('App emitted event verification', () => {
+        // Mount the app
+        const wrapper = mount(app);
+        // Emitt the event
+        let todayDate = new Date();
+        const imgInfo = {
+            title : 'Testing NASA Image',
+            copyright : 'sample copyright',
+            detailExplanation : 'This is just testing',
+            date : todayDate,
+            urlinfo : 'sample url'
+        }
+        wrapper.vm.$emit('imagefetched', imgInfo);
+        expect(wrapper.emitted().imagefetched[0][0].title).toBe('Testing NASA Image');
+        expect(wrapper.emitted().imagefetched[0][0].copyright).toBe('sample copyright');
+        expect(wrapper.emitted().imagefetched[0][0].detailExplanation).toBe('This is just testing');
+        expect(wrapper.emitted().imagefetched[0][0].urlinfo).toBe('sample url');
+        expect(wrapper.emitted().imagefetched[0][0].date.getFullYear()).toEqual(todayDate.getFullYear());
+        expect(wrapper.emitted().imagefetched[0][0].date.getMonth() + 1).toBe(todayDate.getMonth() + 1);
+        expect(wrapper.emitted().imagefetched[0][0].date.getDate()).toBe(todayDate.getDate());
     })
 });
