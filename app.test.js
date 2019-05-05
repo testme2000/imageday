@@ -104,6 +104,7 @@ describe('App Component initialzation Test', () => {
             }
         });
         expect(initilizeImageDay).toHaveBeenCalled();
+        expect(initilizeImageDay).toHaveBeenCalledTimes(1);
     })
     test('App emitted event verification', () => {
         // Mount the app

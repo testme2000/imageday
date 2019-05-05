@@ -28,7 +28,8 @@
                     detailExplanation : '',
                     date : '',
                     urlinfo : ''
-                }
+                },
+                errorMessage : ''
             }
         },
         created : function() {
@@ -44,7 +45,6 @@
             preparedFetch : function() {
                     axios.get(this.imageurl).then(result => {
                         // Make sure that we receive proper result
-                        console.log(result.data);
                         this.imageInformation.title = result.data.title;
                         this.imageInformation.copyright = result.data.copyright;
                         this.imageInformation.detailExplanation = result.data.explanation;
@@ -54,7 +54,6 @@
                         this.$emit('imagefetched',this.imageInformation);
                     }, error => {
                         this.errorMessage = "Information not found";
-                        this.imageInformation.resultArrived = false;
                         this.fetchStatus = true;
                         this.resultArrived = true;
                     });

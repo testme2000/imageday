@@ -4,6 +4,11 @@ import FetchImage from './src/components/FetchImage.vue'
 import axios from 'axios'
 import { exportAllDeclaration } from '@babel/types';
 import GLOBAL from './src/mixins/Global.vue'
+import { JestEnvironment } from '@jest/environment';
+
+jest.mock('axios', () => ({
+    get: jest.fn()
+}));
 
 describe("ImageDay Basic Layout Test", () => {
     ////////////////////////////////////////////////////////////////////
@@ -76,35 +81,84 @@ describe('FetchImage Component initialzation Test', () => {
         let imgInstance = new Vue(FetchImage).$mount();
         expect(imgInstance.imageurl).toBe(imgInstance.NASA_WEBURL + imgInstance.NASA_APIKEY);
     })
-    test('Lifecycle create hook verification', () => {
-        const initilizeImageDay = jest.fn();
-        const wrapper = shallowMount(app, {
-            methods : {
-                initilizeImageDay
-            }
-        });
-        expect(initilizeImageDay).toHaveBeenCalled();
+    test('Lifecycle  hook verification', () => {
+        jest.useFakeTimers();
+
+        let hookwrapper = mount(FetchImage);
+        expect(hookwrapper.vm.imageurl.length).not.toBeNull();
+        expect(hookwrapper.vm.imageurl).toBe('https://api.nasa.gov/planetary/apod?api_key=vME6LAMD7IhEiy7rDmjfIaG6MhiKbu1MNIqxtqd1');
+
+        expect(setTimeout).toHaveBeenCalledTimes(1);
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 5000);
     })
-    /*
-    test('App emitted event verification', () => {
-        // Mount the app
-        const wrapper = mount(app);
-        // Emitt the event
-        let todayDate = new Date();
-        const imgInfo = {
-            title : 'Testing NASA Image',
-            copyright : 'sample copyright',
-            detailExplanation : 'This is just testing',
-            date : todayDate,
-            urlinfo : 'sample url'
-        }
-        wrapper.vm.$emit('imagefetched', imgInfo);
-        expect(wrapper.emitted().imagefetched[0][0].title).toBe('Testing NASA Image');
-        expect(wrapper.emitted().imagefetched[0][0].copyright).toBe('sample copyright');
-        expect(wrapper.emitted().imagefetched[0][0].detailExplanation).toBe('This is just testing');
-        expect(wrapper.emitted().imagefetched[0][0].urlinfo).toBe('sample url');
-        expect(wrapper.emitted().imagefetched[0][0].date.getFullYear()).toEqual(todayDate.getFullYear());
-        expect(wrapper.emitted().imagefetched[0][0].date.getMonth() + 1).toBe(todayDate.getMonth() + 1);
-        expect(wrapper.emitted().imagefetched[0][0].date.getDate()).toBe(todayDate.getDate());
-    })*/
+
+    describe('Image Fetching Verification', () => {
+        beforeEach(() => {
+            axios.get.mockClear();
+           axios.get.mockReturnValue(Promise.resolve({}));
+        });
+        it('Valid Value verfication',async () => {
+            let todayDate = new Date();
+            // Given
+            const result = { 
+                data :  {
+                    title: "A Sample Image from Galaxy",
+                    copyright: "Sample Copyright",
+                    explanation: "Sample Image explanation detail",
+                    date: todayDate,
+                    url: "https://image.url.gov"
+                }
+            };
+            axios.get.mockReturnValue(Promise.resolve(result));
+            const fetchwrapper = mount(FetchImage);
+            await fetchwrapper.vm.$nextTick();
+            // Fetch the image 
+            axios.get.mockReturnValue(Promise.resolve(result));
+            fetchwrapper.vm.preparedFetch();
+            await fetchwrapper.vm.$nextTick();
+    
+
+            // Validate the result
+            expect(axios.get).toHaveBeenCalledWith('https://api.nasa.gov/planetary/apod?api_key=vME6LAMD7IhEiy7rDmjfIaG6MhiKbu1MNIqxtqd1');
+            let objType = Object.prototype.toString.call(fetchwrapper.vm.imageInformation);
+            expect(objType).toContain('Object');
+            // Check the internal state
+            expect(fetchwrapper.vm.imageInformation.title).toEqual("A Sample Image from Galaxy");
+            expect(fetchwrapper.vm.imageInformation.copyright).toEqual("Sample Copyright");
+            expect(fetchwrapper.vm.imageInformation.detailExplanation).toEqual("Sample Image explanation detail");
+            expect(fetchwrapper.vm.imageInformation.urlinfo).toEqual("https://image.url.gov");
+            expect(fetchwrapper.vm.imageInformation.date.getFullYear()).toEqual(todayDate.getFullYear());
+            expect(fetchwrapper.vm.imageInformation.date.getMonth() + 1).toBe(todayDate.getMonth() + 1);
+            expect(fetchwrapper.vm.imageInformation.date.getDate()).toBe(todayDate.getDate());
+            expect(fetchwrapper.vm.resultArrived).toBeTruthy();
+            expect(fetchwrapper.vm.errorMessage.length).toEqual(0);
+        });
+    });
+
+    describe('Invalid response', () => {
+        beforeEach(() => {
+            axios.get.mockClear();
+           axios.get.mockReturnValue(Promise.reject({}));
+        });
+        it('Valid Value verfication',async () => {
+            let todayDate = new Date();
+            // Given
+            const result = { 
+                errorMessage : "Information not found",
+                resultArrived : true,
+                fetchStatus : true
+            };
+            axios.get.mockReturnValue(Promise.reject(result));
+            const fetchwrapper = mount(FetchImage);
+            await fetchwrapper.vm.$nextTick();
+            // Fetch the image 
+            axios.get.mockReturnValue(Promise.resolve(result));
+            fetchwrapper.vm.imageurl = "https:\\invalid.request.gov";
+            fetchwrapper.vm.preparedFetch();
+            await fetchwrapper.vm.$nextTick();
+        });
+
+
+
+    });
 });
