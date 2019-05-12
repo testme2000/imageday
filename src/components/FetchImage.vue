@@ -52,7 +52,8 @@
                         this.imageInformation.urlinfo = result.data.url;
                         this.resultArrived = true;
                         this.$emit('imagefetched',this.imageInformation);
-                    }, error => {
+                    })
+                    .catch( error => {
                         this.errorMessage = "Information not found";
                         this.resultArrived = true;
                     });
