@@ -131,7 +131,7 @@ describe('FetchImage Component initialzation Test', () => {
         });
     });
 });
-
+/*
 describe('Invalid response',async () => {
     beforeEach(() => {
         axios.get.mockClear();
@@ -158,3 +158,4 @@ describe('Invalid response',async () => {
         expect(fetchwrapper.vm.errorMessage).toBe("Information not found");
     });
 });
+*/
