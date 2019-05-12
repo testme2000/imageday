@@ -54,7 +54,6 @@
                         this.$emit('imagefetched',this.imageInformation);
                     }, error => {
                         this.errorMessage = "Information not found";
-                        this.fetchStatus = true;
                         this.resultArrived = true;
                     });
             }
