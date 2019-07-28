@@ -94,7 +94,7 @@ describe('FetchImage Component initialzation Test', () => {
 
     describe('Image Fetching Verification', () => {
         beforeEach(() => {
-            axios.get.mockClear();
+           axios.get.mockClear();
            axios.get.mockReturnValue(Promise.resolve({}));
         });
         it('Valid Value verfication',async () => {
@@ -131,31 +131,26 @@ describe('FetchImage Component initialzation Test', () => {
         });
     });
 });
-/*
-describe('Invalid response',async () => {
-    beforeEach(() => {
-        axios.get.mockClear();
-        axios.get.mockReturnValue(Promise.reject({}));
-    });
+
+describe('Invalid response', () => {
     it('Invalid URL verfication', async () => {
         // Given
         const result = { 
             errorMessage : "Information not found",
-            resultArrived : true,
-            fetchStatus : true
+            resultArrived : true
         };
         // Fetch the error result  
-        axios.get.mockReturnValue(Promise.resolve(result));
+        axios.get.mockReturnValue(Promise.reject(result));
         const fetchwrapper = mount(FetchImage);
         fetchwrapper.vm.imageurl = "https://invalid.request.gov";
         fetchwrapper.vm.preparedFetch();
         await fetchwrapper.vm.$nextTick();
         // Validate the result
-        expect(axios.get).not.toHaveBeenCalledWith('https://api.nasa.gov/planetary/apod?api_key=vME6LAMD7IhEiy7rDmjfIaG6MhiKbu1MNIqxtqd1');
-        expect(axios.get).toHaveBeenCalledWith("https://invalid.request.gov");
-        expect(axios.get).toHaveBeenCalledTimes(1);
+        expect(axios.get).toHaveBeenCalledWith('https://api.nasa.gov/planetary/apod?api_key=vME6LAMD7IhEiy7rDmjfIaG6MhiKbu1MNIqxtqd1');
+        expect(axios.get).toHaveBeenCalledTimes(2);
         expect(fetchwrapper.vm.errorMessage.length).not.toEqual(0);
         expect(fetchwrapper.vm.errorMessage).toBe("Information not found");
+        expect(fetchwrapper.vm.resultArrived).toBeTruthy();
     });
 });
-*/
+
