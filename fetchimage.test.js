@@ -142,7 +142,6 @@ describe('Invalid response', () => {
         // Fetch the error result  
         axios.get.mockReturnValue(Promise.reject(result));
         const fetchwrapper = mount(FetchImage);
-        fetchwrapper.vm.imageurl = "https://invalid.request.gov";
         fetchwrapper.vm.preparedFetch();
         await fetchwrapper.vm.$nextTick();
         // Validate the result
