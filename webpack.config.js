@@ -49,7 +49,8 @@ module.exports = {
     historyApiFallback: true,
     noInfo: true,
     overlay: true,
-    open: 'Chrome'
+    open: 'Chrome',
+    disableHostCheck: true
   },
   performance: {
     hints: false
